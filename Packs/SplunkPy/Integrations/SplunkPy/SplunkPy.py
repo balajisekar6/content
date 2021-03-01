@@ -184,7 +184,7 @@ class Notable:
     def submitted(self):
         """ Returns an indicator on whether any of the notable's enrichments was submitted or not """
         return any(enrichment.status == Enrichment.IN_PROGRESS for enrichment in self.enrichments) and \
-               len(self.enrichments) == len(ENABLED_ENRICHMENTS)
+            len(self.enrichments) == len(ENABLED_ENRICHMENTS)
 
     def failed_to_submit(self):
         """ Returns an indicator on whether all notable's enrichments were failed to submit or not """
@@ -803,9 +803,9 @@ def handle_enriched_fetch(reader, last_run_regular_fetch, last_run_over_fetch, c
 
     for item in reader:
         cache_object.not_yet_submitted_notables.append(Notable(data=item))
-        cache_object.num_fetched_notables += 1
 
     # maintaining last run metadata to be set when we finish handling all notables
+    cache_object.num_fetched_notables = len(cache_object.not_yet_submitted_notables)
     cache_object.last_run_regular_fetch = last_run_regular_fetch
     cache_object.last_run_over_fetch = last_run_over_fetch
     demisto.info("Fetched {} notables.".format(cache_object.num_fetched_notables))
@@ -2207,8 +2207,6 @@ def main():
         splunk_job_create_command(service)
     elif command == 'splunk-results':
         splunk_results_command(service)
-    elif command == 'fetch-incidents':
-        fetch_incidents(service)
     elif command == 'splunk-get-indexes':
         splunk_get_indexes_command(service)
     elif command == 'fetch-incidents':
